@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bowl &amp; Bloom — Nourishing bowls, brewed to bloom</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Jost:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F8F1E4;
+    --paper:#FFFBF2;
+    --cocoa:#4A2E20;
+    --cocoa-deep:#332015;
+    --matcha:#7E9A6C;
+    --matcha-deep:#5B7A4C;
+    --matcha-soft:#DCE6D3;
+    --lavender:#B7A6D9;
+    --lavender-deep:#8B72B8;
+    --lavender-soft:#EDE6F7;
+    --charcoal:#2B241D;
+    --line: rgba(43,36,29,0.13);
+    --max: 1120px;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+
+  body{
+    background:var(--cream);
+    color:var(--charcoal);
+    font-family:'Jost', sans-serif;
+    font-weight:400;
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+
+  h1,h2,h3,h4{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    line-height:1.1;
+    letter-spacing:-0.01em;
+  }
+
+  .mono{ font-family:'JetBrains Mono', monospace; letter-spacing:0.02em; }
+
+  .wrap{ max-width:var(--max); margin:0 auto; padding:0 28px; }
+  a{ color:inherit; }
+  ::selection{ background:var(--lavender); color:var(--cocoa-deep); }
+
+  a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible{
+    outline:2px solid var(--lavender-deep); outline-offset:3px;
+  }
+
+  .grain{
+    position:fixed; inset:0; pointer-events:none; z-index:999; opacity:0.03; mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ---------- Petal decoration ---------- */
+  .petal{ position:absolute; opacity:0.55; animation: float 7s ease-in-out infinite; pointer-events:none; }
+  @keyframes float{ 0%,100%{ transform:translateY(0) rotate(0deg);} 50%{ transform:translateY(-10px) rotate(6deg);} }
+
+  /* ---------- Header ---------- */
+  header{
+    position:sticky; top:0; z-index:100;
+    background:rgba(248,241,228,0.92); backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{ position:relative; display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:16px; padding:18px 28px; max-width:var(--max); margin:0 auto; }
+  .brand{
+    grid-column:2; display:flex; align-items:center; justify-content:center;
+    font-family:'Fraunces', serif; font-weight:600; font-size:1.3rem; color:var(--cocoa-deep);
+    letter-spacing:0.01em;
+  }
+  .brand em{ font-style:italic; color:var(--matcha-deep); font-weight:500; margin-left:0.3em; }
+
+  .nav-toggle{
+    grid-column:3; justify-self:end; display:flex; align-items:center; justify-content:center;
+    background:none; border:1px solid var(--line); border-radius:6px; cursor:pointer; padding:8px;
+    transition:border-color 0.25s ease, background 0.25s ease;
+  }
+  .nav-toggle:hover{ border-color:var(--matcha-deep); background:var(--matcha-soft); }
+
+  nav.links{
+    position:absolute; top:calc(100% + 10px); right:28px; z-index:50;
+    background:var(--paper); border:1px solid var(--line); border-radius:10px;
+    box-shadow:0 14px 32px rgba(43,36,29,0.14);
+    display:flex; flex-direction:column; gap:4px; min-width:200px; padding:10px;
+    opacity:0; transform:translateY(-8px); pointer-events:none;
+    transition:opacity 0.25s ease, transform 0.25s ease;
+  }
+  nav.links.open{ opacity:1; transform:translateY(0); pointer-events:auto; }
+  nav.links a{
+    text-decoration:none; color:var(--charcoal); font-size:0.92rem;
+    padding:10px 12px; border-radius:6px; transition:background 0.2s ease, color 0.2s ease;
+  }
+  nav.links a:hover{ background:var(--matcha-soft); color:var(--cocoa-deep); }
+
+  /* ---------- Hero ---------- */
+  .hero-scroll{ position:relative; height:230vh; }
+  .hero{
+    position:sticky; top:0; height:100vh; overflow:hidden;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .bowl-illustration{
+    position:absolute; left:0; top:50%; z-index:1;
+    width:min(58vw, 640px);
+    transform:translate(-50%,-50%);
+    will-change:transform;
+    pointer-events:none;
+  }
+  .bowl-illustration svg{ width:100%; height:auto; display:block; }
+
+  .hero-text{
+    position:relative; z-index:2;
+    width:100%;
+    max-width:560px;
+    margin:0 auto;
+    padding:0 28px;
+    text-align:center;
+    box-sizing:border-box;
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace; font-size:0.72rem; letter-spacing:0.16em; text-transform:uppercase;
+    color:var(--lavender-deep); margin-bottom:20px; display:inline-block;
+    opacity:0; transform:translateY(10px); animation: rise 0.7s 0.1s ease forwards;
+  }
+  .hero h1{
+    font-size:clamp(2.1rem, 4.4vw, 3.6rem); color:var(--cocoa-deep);
+    opacity:0; transform:translateY(18px); animation: rise 0.9s 0.25s ease forwards;
+  }
+  .hero h1 em{ font-style:italic; color:var(--matcha-deep); font-weight:500; }
+  .hero p.lede{
+    max-width:440px; margin:20px auto 0; font-size:1.02rem; color:#5c5347;
+    opacity:0; transform:translateY(14px); animation: rise 0.9s 0.4s ease forwards;
+  }
+  .hero-cta{ display:flex; gap:16px; justify-content:center; margin-top:30px; opacity:0; transform:translateY(14px); animation: rise 0.9s 0.6s ease forwards; }
+  .btn{
+    font-family:'JetBrains Mono', monospace; font-size:0.8rem; letter-spacing:0.03em;
+    padding:13px 26px; border-radius:2px; text-decoration:none; cursor:pointer;
+    border:1.5px solid var(--matcha-deep); transition:transform 0.25s ease, background 0.25s ease, color 0.25s ease;
+    display:inline-block;
+  }
+  .btn-solid{ background:var(--matcha-deep); color:var(--paper); }
+  .btn-solid:hover{ background:var(--cocoa-deep); border-color:var(--cocoa-deep); transform:translateY(-2px); }
+  .btn-outline{ background:transparent; color:var(--matcha-deep); }
+  .btn-outline:hover{ background:var(--matcha-soft); transform:translateY(-2px); }
+
+  .hero-stats{ display:flex; gap:24px; justify-content:center; margin-top:34px; }
+  .hero-stats .stat{
+    border-top:1px solid var(--line); padding-top:8px;
+    opacity:0; transform:translateY(16px) scale(0.82);
+    transition:opacity 0.5s cubic-bezier(.2,1.6,.4,1), transform 0.5s cubic-bezier(.2,1.6,.4,1);
+  }
+  .hero-stats .stat.in{ opacity:1; transform:translateY(0) scale(1); }
+  .hero-stats .num{ font-family:'JetBrains Mono', monospace; font-size:1.1rem; color:var(--cocoa-deep); }
+  .hero-stats .lbl{ font-size:0.7rem; color:#7a7164; text-transform:uppercase; letter-spacing:0.06em; }
+
+  @keyframes rise{ to{ opacity:1; transform:translateY(0); } }
+
+  /* ---------- Section shell ---------- */
+  section{ padding:96px 0; position:relative; }
+  .section-head{ display:flex; align-items:baseline; gap:16px; margin-bottom:46px; flex-wrap:wrap; }
+  .section-head .num{ font-family:'JetBrains Mono', monospace; font-size:0.78rem; color:var(--lavender-deep); }
+  .section-head h2{ font-size:clamp(1.8rem, 3.6vw, 2.5rem); color:var(--cocoa-deep); }
+  .section-head p{ color:#6b6255; max-width:420px; font-size:0.95rem; }
+
+  .reveal{ opacity:0; transform:translateY(26px); transition:opacity 0.8s ease, transform 0.8s ease; }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+
+  /* ---------- Philosophy ---------- */
+  .philosophy{ background:var(--cocoa-deep); color:var(--paper); }
+  .philosophy .wrap{ max-width:760px; }
+  .philosophy .section-head h2{ color:var(--paper); }
+  .philosophy .section-head p{ color:#d9c9bb; }
+  .phil-text p{ color:#e3d6c9; margin-bottom:16px; font-size:1rem; }
+  .phil-text em{ color:var(--lavender); font-style:italic; }
+
+  /* Infinite ingredient marquee */
+  .philosophy{ overflow:hidden; }
+  .ingredient-marquee{
+    margin:32px -28px 6px;
+    padding:18px 0;
+    overflow:hidden;
+    border-top:1px solid rgba(255,251,242,0.14);
+    border-bottom:1px solid rgba(255,251,242,0.14);
+    -webkit-mask-image:linear-gradient(to right, transparent, black 6%, black 94%, transparent);
+    mask-image:linear-gradient(to right, transparent, black 6%, black 94%, transparent);
+  }
+  .marquee-track{
+    display:flex; align-items:center; width:max-content;
+    gap:52px;
+    animation:marquee-scroll 24s linear infinite;
+  }
+  .ingredient-marquee:hover .marquee-track{ animation-play-state:paused; }
+  .marquee-item{
+    display:flex; align-items:center; gap:11px;
+    font-family:'JetBrains Mono', monospace; font-size:0.84rem; letter-spacing:0.03em;
+    color:#e8ddd0; white-space:nowrap;
+  }
+  .marquee-item svg{ flex-shrink:0; width:19px; height:19px; color:var(--lavender); }
+  @keyframes marquee-scroll{ from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
+
+  .facts{ display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:40px; }
+  .fact-row.align-left{ text-align:left; }
+  .fact-row.align-right{ text-align:right; }
+  .fact-row.align-center{ grid-column:1 / -1; text-align:center; justify-self:center; margin-top:6px; }
+  .facts .label{ font-family:'JetBrains Mono', monospace; font-size:0.66rem; letter-spacing:0.09em; text-transform:uppercase; color:var(--lavender); display:block; margin-bottom:5px; }
+  .facts .val{ font-family:'Fraunces', serif; font-size:1.05rem; }
+
+  /* ---------- Menu ---------- */
+  .menu{ background:var(--cream); }
+  .tabs{
+    position:relative;
+    display:flex; justify-content:center; align-items:center;
+    gap:4px; flex-wrap:nowrap;
+    overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none;
+    margin:0 auto 52px; padding:6px;
+    max-width:100%;
+  }
+  .tabs::-webkit-scrollbar{ display:none; }
+  .tab-pill{
+    position:absolute; top:6px; left:0; height:calc(100% - 12px);
+    background:var(--matcha-soft);
+    border-radius:999px;
+    transition:left 0.45s cubic-bezier(.22,1,.36,1), width 0.45s cubic-bezier(.22,1,.36,1);
+    z-index:0;
+  }
+  .tab{
+    position:relative; z-index:1;
+    font-family:'JetBrains Mono', monospace; font-size:0.8rem; letter-spacing:0.02em;
+    padding:11px 22px; border-radius:999px; white-space:nowrap;
+    background:none; border:none; cursor:pointer; color:#7a7164;
+    transition:color 0.3s ease;
+  }
+  .tab[aria-selected="true"]{ color:var(--cocoa-deep); font-weight:500; }
+  .tab:hover{ color:var(--cocoa-deep); }
+
+  .menu-panel{ display:none; }
+  .menu-panel.active{ display:block; }
+  .menu-intro{ color:#6b6255; margin-bottom:32px; max-width:560px; font-size:0.95rem; }
+
+  .menu-grid{ display:grid; grid-template-columns:repeat(2, 1fr); gap:0 48px; }
+  .menu-item{
+    display:flex; justify-content:space-between; gap:16px; padding:20px 0; border-bottom:1px solid var(--line);
+    opacity:0; transform:translateY(14px); transition:opacity 0.6s ease, transform 0.6s ease;
+  }
+  .menu-item.in{ opacity:1; transform:translateY(0); }
+  .menu-item .m-name{ font-family:'Fraunces', serif; font-size:1.05rem; color:var(--cocoa-deep); margin-bottom:5px; }
+  .menu-item .m-desc{ font-size:0.85rem; color:#8a8071; max-width:300px; margin-bottom:6px; }
+  .menu-item .m-macro{ font-family:'JetBrains Mono', monospace; font-size:0.7rem; color:var(--matcha-deep); letter-spacing:0.02em; }
+  .menu-item .m-right{ text-align:right; white-space:nowrap; align-self:flex-start; }
+  .menu-item .m-price{ font-family:'JetBrains Mono', monospace; font-size:0.95rem; color:var(--lavender-deep); position:relative; }
+  .menu-item .m-price::after{ content:''; display:block; height:1px; width:0; background:var(--lavender-deep); transition:width 0.4s ease; margin-top:3px; }
+  .menu-item:hover .m-price::after{ width:100%; }
+  .menu-item:hover .m-name{ color:var(--matcha-deep); }
+
+  .tag{
+    display:inline-block; font-family:'JetBrains Mono', monospace; font-size:0.6rem; letter-spacing:0.06em;
+    text-transform:uppercase; color:var(--matcha-deep); border:1px solid var(--matcha-deep);
+    padding:1px 6px; border-radius:2px; margin-left:6px; vertical-align:middle;
+  }
+  .tag.vegan{ color:var(--lavender-deep); border-color:var(--lavender-deep); }
+
+  /* ---------- Build Your Bowl (requests) ---------- */
+  .requests{ background:var(--paper); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+  .req-grid{ display:grid; grid-template-columns:0.85fr 1.15fr; gap:60px; }
+  .req-note{ color:#6b6255; font-size:0.95rem; }
+  .req-note ul{ margin-top:20px; padding-left:0; list-style:none; }
+  .req-note li{ padding:10px 0; border-top:1px solid var(--line); font-size:0.88rem; }
+  .req-note li:last-child{ border-bottom:1px solid var(--line); }
+
+  form{ display:flex; flex-direction:column; gap:22px; }
+  .field{ position:relative; display:flex; flex-direction:column; gap:8px; }
+  .field label{ font-family:'JetBrains Mono', monospace; font-size:0.68rem; letter-spacing:0.08em; text-transform:uppercase; color:#8a8071; }
+  .field input, .field textarea{
+    font-family:'Jost', sans-serif; font-size:0.98rem; color:var(--charcoal); background:transparent;
+    border:none; border-bottom:1.5px solid var(--line); padding:8px 2px; transition:border-color 0.3s ease;
+  }
+  .field textarea{ resize:vertical; min-height:90px; }
+  .field input:focus, .field textarea:focus{ border-color:var(--lavender-deep); outline:none; }
+  .row-2{ display:grid; grid-template-columns:1fr 1fr; gap:22px; }
+
+  .chip-group{ display:flex; flex-wrap:wrap; gap:10px; }
+  .chip{
+    font-family:'JetBrains Mono', monospace; font-size:0.75rem; padding:7px 14px; border:1px solid var(--line);
+    border-radius:20px; cursor:pointer; background:transparent; color:#6b6255; transition:all 0.25s ease;
+  }
+  .chip.selected, .chip:hover{ border-color:var(--matcha-deep); color:var(--matcha-deep); background:var(--matcha-soft); }
+
+  .submit-row{ display:flex; align-items:center; gap:18px; margin-top:8px; }
+  .stamp-btn{
+    font-family:'JetBrains Mono', monospace; font-size:0.85rem; padding:14px 30px; background:var(--lavender-deep);
+    color:var(--paper); border:none; border-radius:2px; cursor:pointer; transition:transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .stamp-btn:hover{ transform:translateY(-2px) rotate(-1deg); box-shadow:0 6px 14px rgba(139,114,184,0.3); }
+  .form-status{ font-family:'JetBrains Mono', monospace; font-size:0.8rem; color:var(--matcha-deep); opacity:0; transition:opacity 0.4s ease; }
+  .form-status.show{ opacity:1; }
+
+  /* ---------- Footer ---------- */
+  footer{ background:var(--cocoa-deep); color:#d9c9bb; padding:56px 0 30px; }
+  .foot-grid{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:30px; margin-bottom:36px; }
+  footer h4{ color:var(--paper); font-size:1.3rem; margin-bottom:10px; }
+  footer .addr{ font-size:0.88rem; line-height:1.7; }
+  footer .fine{
+    border-top:1px solid rgba(255,251,242,0.15); padding-top:20px; font-family:'JetBrains Mono', monospace;
+    font-size:0.72rem; color:#a8988a; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width:820px){
+    .hero-scroll{ height:190vh; }
+    .hero-text{ margin-left:0; margin-right:0; max-width:100%; padding:0 24px; }
+    .bowl-illustration{ width:82vw; opacity:0.5; }
+    .menu-grid{ grid-template-columns:1fr; }
+    .req-grid{ grid-template-columns:1fr; }
+    .row-2{ grid-template-columns:1fr; }
+    .brand{ font-size:1.1rem; }
+    nav.links{ right:16px; min-width:180px; }
+    .ingredient-marquee{ margin:28px -24px 6px; }
+    .facts{ gap:16px 20px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important; }
+    .marquee-track{ animation:none !important; transform:none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+
+<header>
+  <div class="nav">
+    <div class="brand">Bowl &amp; <em>Bloom</em></div>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+        <!-- spoon -->
+        <line x1="6" y1="6" x2="20" y2="6" stroke="#2B241D" stroke-width="1.4" stroke-linecap="round"/>
+        <ellipse cx="4" cy="6" rx="2.6" ry="1.8" fill="none" stroke="#2B241D" stroke-width="1.4"/>
+        <!-- knife -->
+        <line x1="8" y1="11" x2="20" y2="11" stroke="#2B241D" stroke-width="1.4" stroke-linecap="round"/>
+        <path d="M2 11 L8 8.5 L8 13.5 Z" fill="#2B241D"/>
+        <!-- butter knife -->
+        <line x1="8" y1="16" x2="20" y2="16" stroke="#2B241D" stroke-width="1.4" stroke-linecap="round"/>
+        <rect x="2" y="14.3" width="6" height="3.4" rx="1.4" fill="#2B241D"/>
+      </svg>
+    </button>
+    <nav class="links" id="navLinks">
+      <a href="#philosophy">Philosophy</a>
+      <a href="#menu">Menu</a>
+      <a href="#requests">Build Your Bowl</a>
+      <a href="#visit">Visit</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero-scroll" id="heroScroll">
+  <section class="hero" id="heroStage">
+    <div class="bowl-illustration" id="bowlIllustration" aria-hidden="true">
+      <svg viewBox="0 0 480 480">
+        <ellipse cx="240" cy="404" rx="150" ry="18" fill="#4A2E20" opacity="0.12"/>
+        <!-- coconut shell exterior -->
+        <path d="M70 240 C70 348 150 392 240 392 C330 392 410 348 410 240 Z" fill="#5A3826"/>
+        <path d="M70 240 C70 348 150 392 240 392 C330 392 410 348 410 240 Z" fill="none" stroke="#3A2417" stroke-width="1.2" opacity="0.5"/>
+        <g stroke="#3A2417" stroke-width="1" opacity="0.35">
+          <path d="M104 256 C150 336 330 336 376 256"/>
+          <path d="M90 232 C150 308 330 308 390 232"/>
+          <path d="M120 282 C165 340 315 340 360 282"/>
+        </g>
+        <!-- rim -->
+        <ellipse cx="240" cy="240" rx="172" ry="52" fill="#7C5138"/>
+        <ellipse cx="240" cy="234" rx="172" ry="52" fill="#8A5C40"/>
+        <!-- creamy base -->
+        <ellipse cx="240" cy="232" rx="152" ry="42" fill="#E9F0DE"/>
+        <path d="M96 228 C150 250 330 250 384 228 C355 216 300 208 240 208 C180 208 125 216 96 228Z" fill="#DCE6D0" opacity="0.7"/>
+
+        <!-- kiwi slices (top left) -->
+        <g>
+          <circle cx="158" cy="204" r="24" fill="#C9D97A"/>
+          <circle cx="158" cy="204" r="24" fill="none" stroke="#8FA84C" stroke-width="2"/>
+          <circle cx="158" cy="204" r="9" fill="#EDEBD0"/>
+          <g fill="#5B3A1E">
+            <circle cx="158" cy="191" r="1.5"/><circle cx="168" cy="195" r="1.5"/><circle cx="172" cy="204" r="1.5"/>
+            <circle cx="168" cy="213" r="1.5"/><circle cx="158" cy="217" r="1.5"/><circle cx="148" cy="213" r="1.5"/>
+            <circle cx="144" cy="204" r="1.5"/><circle cx="148" cy="195" r="1.5"/>
+          </g>
+        </g>
+        <g>
+          <circle cx="192" cy="192" r="18" fill="#C9D97A"/>
+          <circle cx="192" cy="192" r="18" fill="none" stroke="#8FA84C" stroke-width="1.6"/>
+          <circle cx="192" cy="192" r="6.5" fill="#EDEBD0"/>
+          <g fill="#5B3A1E">
+            <circle cx="192" cy="182" r="1.2"/><circle cx="200" cy="187" r="1.2"/><circle cx="200" cy="197" r="1.2"/>
+            <circle cx="192" cy="202" r="1.2"/><circle cx="184" cy="197" r="1.2"/><circle cx="184" cy="187" r="1.2"/>
+          </g>
+        </g>
+
+        <!-- fig slices (top center) -->
+        <g>
+          <circle cx="250" cy="196" r="21" fill="#6E3350"/>
+          <circle cx="250" cy="196" r="21" fill="none" stroke="#4A1F35" stroke-width="1.5"/>
+          <g stroke="#C288A8" stroke-width="1" opacity="0.85">
+            <line x1="250" y1="196" x2="250" y2="178"/>
+            <line x1="250" y1="196" x2="264" y2="186"/>
+            <line x1="250" y1="196" x2="268" y2="196"/>
+            <line x1="250" y1="196" x2="264" y2="207"/>
+            <line x1="250" y1="196" x2="250" y2="213"/>
+            <line x1="250" y1="196" x2="236" y2="207"/>
+            <line x1="250" y1="196" x2="232" y2="196"/>
+            <line x1="250" y1="196" x2="236" y2="186"/>
+          </g>
+          <circle cx="250" cy="196" r="4.5" fill="#D98CB0"/>
+        </g>
+        <g>
+          <circle cx="284" cy="206" r="16" fill="#6E3350"/>
+          <circle cx="284" cy="206" r="16" fill="none" stroke="#4A1F35" stroke-width="1.3"/>
+          <circle cx="284" cy="206" r="3.5" fill="#D98CB0"/>
+        </g>
+
+        <!-- granola + dried strawberry bits -->
+        <g fill="#B08A54">
+          <ellipse cx="330" cy="212" rx="8" ry="5" transform="rotate(15 330 212)"/>
+          <ellipse cx="344" cy="221" rx="7" ry="4.5" transform="rotate(-10 344 221)"/>
+          <ellipse cx="320" cy="226" rx="6" ry="4" transform="rotate(22 320 226)"/>
+          <ellipse cx="352" cy="206" rx="6" ry="4" transform="rotate(6 352 206)"/>
+        </g>
+        <g fill="#B23A3A">
+          <circle cx="336" cy="232" r="2.2"/><circle cx="322" cy="238" r="2"/><circle cx="348" cy="230" r="1.8"/>
+        </g>
+
+        <!-- peanut butter dollop -->
+        <path d="M150 232 C160 220 184 222 190 235 C194 246 178 252 165 250 C150 248 143 242 150 232Z" fill="#B9863E"/>
+        <path d="M159 231 C168 226 180 228 184 235" fill="none" stroke="#D8A85C" stroke-width="2.2" stroke-linecap="round" opacity="0.7"/>
+
+        <!-- apple slices -->
+        <g fill="#F6ECD9" stroke="#E3C9A0" stroke-width="1">
+          <ellipse cx="266" cy="240" rx="7" ry="18"/>
+          <ellipse cx="279" cy="237" rx="7" ry="18"/>
+          <ellipse cx="292" cy="240" rx="7" ry="18"/>
+        </g>
+        <g fill="none" stroke="#C4574A" stroke-width="2" opacity="0.75">
+          <path d="M259 224 A7 18 0 0 1 259 256"/>
+          <path d="M272 221 A7 18 0 0 1 272 253"/>
+          <path d="M285 224 A7 18 0 0 1 285 256"/>
+        </g>
+
+        <!-- cacao nibs -->
+        <g fill="#3A2417">
+          <circle cx="222" cy="220" r="1.6"/><circle cx="232" cy="228" r="1.4"/><circle cx="246" cy="222" r="1.5"/>
+          <circle cx="200" cy="214" r="1.4"/><circle cx="212" cy="234" r="1.4"/>
+        </g>
+
+        <!-- lavender flowers -->
+        <g transform="translate(134,246)">
+          <circle cx="-6" cy="0" r="4.2" fill="#B7A6D9"/><circle cx="6" cy="0" r="4.2" fill="#B7A6D9"/>
+          <circle cx="0" cy="-6" r="4.2" fill="#B7A6D9"/><circle cx="0" cy="6" r="4.2" fill="#B7A6D9"/>
+          <circle cx="0" cy="0" r="3" fill="#8B72B8"/>
+        </g>
+        <g transform="translate(360,238) scale(0.75)">
+          <circle cx="-6" cy="0" r="4.2" fill="#B7A6D9"/><circle cx="6" cy="0" r="4.2" fill="#B7A6D9"/>
+          <circle cx="0" cy="-6" r="4.2" fill="#B7A6D9"/><circle cx="0" cy="6" r="4.2" fill="#B7A6D9"/>
+          <circle cx="0" cy="0" r="3" fill="#8B72B8"/>
+        </g>
+        <g transform="translate(220,256) scale(0.55)">
+          <circle cx="-6" cy="0" r="4.2" fill="#B7A6D9"/><circle cx="6" cy="0" r="4.2" fill="#B7A6D9"/>
+          <circle cx="0" cy="-6" r="4.2" fill="#B7A6D9"/><circle cx="0" cy="6" r="4.2" fill="#B7A6D9"/>
+          <circle cx="0" cy="0" r="3" fill="#8B72B8"/>
+        </g>
+
+        <!-- wooden spoon -->
+        <g transform="rotate(26 240 240)">
+          <rect x="336" y="228" width="150" height="14" rx="7" fill="#7C5138"/>
+          <ellipse cx="340" cy="235" rx="28" ry="17" fill="#8A5C40"/>
+          <ellipse cx="340" cy="235" rx="28" ry="17" fill="none" stroke="#5A3826" stroke-width="1.5"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="hero-text">
+      <h1>Nourishing bowls,<br><em>brewed to bloom.</em></h1>
+      <p class="lede">Whole-food bowls built around real macros — lean protein, good fats, nothing fried, nothing added just for shelf life. Every plate lists its calories, protein, and fat, right next to the price.</p>
+      <div class="hero-cta">
+        <a href="#menu" class="btn btn-solid">See the menu</a>
+        <a href="#philosophy" class="btn btn-outline">Our approach</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat" data-swipe="1"><div class="num mono">20–34g</div><div class="lbl">Protein per bowl</div></div>
+        <div class="stat" data-swipe="2"><div class="num mono">&lt;12g</div><div class="lbl">Fat per bowl, avg.</div></div>
+        <div class="stat" data-swipe="3"><div class="num mono">0g</div><div class="lbl">Added refined sugar</div></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<section class="philosophy" id="philosophy">
+  <div class="wrap">
+    <div>
+      <div class="section-head reveal">
+        <div><h2>Fuel Your Best Self</h2></div>
+      </div>
+      <div class="phil-text reveal">
+        <p>We don't build food around cravings—we build it around what your body needs.</p>
+        <p>Every bowl is thoughtfully balanced with protein, good fats, whole ingredients, and flavour you'll actually look forward to.</p>
+      </div>
+
+      <div class="ingredient-marquee reveal">
+        <div class="marquee-track">
+          <span class="marquee-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5c3.2 4.1 6 8 6 11.5a6 6 0 1 1-12 0c0-3.5 2.8-7.4 6-11.5Z"/></svg>Olive Oil</span>
+          <span class="marquee-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3.5 0 6.5 5 6.5 10a6.5 6.5 0 0 1-13 0C5.5 8 8.5 3 12 3Z"/></svg>Egg</span>
+          <span class="marquee-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19c7-1 12-6 13-13-7 1-12 6-13 13Z"/><path d="M5 19c2-4 5-7 9-9"/></svg>Vegan</span>
+          <span class="marquee-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c-2.8 0-4.6 3-4.6 6.8 0 4.7 2 9.7 4.6 9.7s4.6-5 4.6-9.7C16.6 6 14.8 3 12 3Z"/></svg>Nuts</span>
+          <span class="marquee-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="9" cy="13" rx="2.6" ry="4" transform="rotate(-20 9 13)"/><ellipse cx="15" cy="11" rx="2.6" ry="4" transform="rotate(15 15 11)"/></svg>Seeds</span>
+          <span class="marquee-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c4 3 6 7 6 10.5a6 6 0 0 1-12 0C6 10 8 6 12 3Z"/><circle cx="12" cy="14.5" r="2.4"/></svg>Whole Foods</span>
+          <span class="marquee-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="2.3"/><circle cx="19" cy="12" r="2.3"/><line x1="7.3" y1="12" x2="16.7" y2="12"/><line x1="4" y1="9.5" x2="4" y2="14.5"/><line x1="20" y1="9.5" x2="20" y2="14.5"/></svg>High Protein</span>
+
+          <span class="marquee-item" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5c3.2 4.1 6 8 6 11.5a6 6 0 1 1-12 0c0-3.5 2.8-7.4 6-11.5Z"/></svg>Olive Oil</span>
+          <span class="marquee-item" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3.5 0 6.5 5 6.5 10a6.5 6.5 0 0 1-13 0C5.5 8 8.5 3 12 3Z"/></svg>Egg</span>
+          <span class="marquee-item" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19c7-1 12-6 13-13-7 1-12 6-13 13Z"/><path d="M5 19c2-4 5-7 9-9"/></svg>Vegan</span>
+          <span class="marquee-item" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c-2.8 0-4.6 3-4.6 6.8 0 4.7 2 9.7 4.6 9.7s4.6-5 4.6-9.7C16.6 6 14.8 3 12 3Z"/></svg>Nuts</span>
+          <span class="marquee-item" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="9" cy="13" rx="2.6" ry="4" transform="rotate(-20 9 13)"/><ellipse cx="15" cy="11" rx="2.6" ry="4" transform="rotate(15 15 11)"/></svg>Seeds</span>
+          <span class="marquee-item" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c4 3 6 7 6 10.5a6 6 0 0 1-12 0C6 10 8 6 12 3Z"/><circle cx="12" cy="14.5" r="2.4"/></svg>Whole Foods</span>
+          <span class="marquee-item" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="2.3"/><circle cx="19" cy="12" r="2.3"/><line x1="7.3" y1="12" x2="16.7" y2="12"/><line x1="4" y1="9.5" x2="4" y2="14.5"/><line x1="20" y1="9.5" x2="20" y2="14.5"/></svg>High Protein</span>
+        </div>
+      </div>
+
+      <div class="facts reveal">
+        <div class="fact-row align-left">
+          <div><span class="label">Fat Sources</span><span class="val">Nuts, seeds, olive oil</span></div>
+        </div>
+        <div class="fact-row align-right">
+          <div><span class="label">Clean Preparation</span><span class="val">Steamed, grilled, raw</span></div>
+        </div>
+        <div class="fact-row align-center">
+          <div><span class="label">Made Fresh</span><span class="val">Every single day</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="menu" id="menu">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <h2>MENU</h2>
+        <p>Every item lists calories, protein, and fat. Prices in rupees.</p>
+      </div>
+    </div>
+
+    <div class="tabs" role="tablist" aria-label="Menu categories">
+      <div class="tab-pill" id="tabPill" aria-hidden="true"></div>
+      <button class="tab" role="tab" aria-selected="true" data-panel="yogurt">Yogurt Bowls</button>
+      <button class="tab" role="tab" aria-selected="false" data-panel="drinks">Drinks</button>
+      <button class="tab" role="tab" aria-selected="false" data-panel="toast">Toasts</button>
+      <button class="tab" role="tab" aria-selected="false" data-panel="bowls">Protein Bowls</button>
+      <button class="tab" role="tab" aria-selected="false" data-panel="oat">Oat Bowls</button>
+    </div>
+
+    <div class="menu-panel" id="panel-bowls">
+      <p class="menu-intro">Grain and greens bases, built to keep protein high and fat sensible.</p>
+      <div class="menu-grid">
+        <div class="menu-item"><div><div class="m-name">Grilled Chicken Power Bowl<span class="tag">High protein</span></div><div class="m-desc">Chicken breast, brown rice, broccoli, peanut-lime dressing</div><div class="m-macro mono">420 kcal · 34g protein · 8g fat</div></div><div class="m-right"><div class="m-price">₹320</div></div></div>
+        <div class="menu-item"><div><div class="m-name">Roasted Chickpea Quinoa Bowl<span class="tag vegan">Vegan</span></div><div class="m-desc">Chickpeas, quinoa, kale, tahini-lemon dressing</div><div class="m-macro mono">380 kcal · 22g protein · 9g fat</div></div><div class="m-right"><div class="m-price">₹260</div></div></div>
+        <div class="menu-item"><div><div class="m-name">Paneer Tikka Millet Bowl<span class="tag">Veg</span></div><div class="m-desc">Grilled paneer, foxtail millet, peppers, mint yogurt</div><div class="m-macro mono">390 kcal · 26g protein · 11g fat</div></div><div class="m-right"><div class="m-price">₹290</div></div></div>
+        <div class="menu-item"><div><div class="m-name">Tofu Edamame Soba Bowl<span class="tag vegan">Vegan</span></div><div class="m-desc">Tofu, edamame, soba noodles, sesame-ginger</div><div class="m-macro mono">360 kcal · 24g protein · 7g fat</div></div><div class="m-right"><div class="m-price">₹300</div></div></div>
+        <div class="menu-item"><div><div class="m-name">Egg White Spinach Bowl</div><div class="m-desc">Egg whites, spinach, sweet potato, avocado</div><div class="m-macro mono">340 kcal · 28g protein · 10g fat</div></div><div class="m-right"><div class="m-price">₹280</div></div></div>
+        <div class="menu-item"><div><div class="m-name">Build Your Own Bowl</div><div class="m-desc">Pick a base, a protein, two toppings — we'll tell you the macros</div><div class="m-macro mono">Varies by build</div></div><div class="m-right"><div class="m-price">From ₹240</div></div></div>
+      </div>
+    </div>
+
+    <div class="menu-panel active" id="panel-yogurt">
+      <p class="menu-intro">Greek yogurt or hung curd bases, lightly sweetened with fruit, never syrup.</p>
+      <div class="menu-grid">
+        <div class="menu-item"><div><div class="m-name">Greek Yogurt Berry Bowl</div><div class="m-desc">Mixed berries, honey drizzle, toasted almonds</div><div class="m-macro mono">260 kcal · 18g protein · 6g fat</div></div><div class="m-right"><div class="m-price">₹220</div></div></div>
+        <div class="menu-item"><div><div class="m-name">Banana Peanut Protein Bowl</div><div class="m-desc">Greek yogurt, banana, peanut butter, house granola</div><div class="m-macro mono">340 kcal · 20g protein · 11g fat</div></div><div class="m-right"><div class="m-price">₹240</div></div></div>
+        <div class="menu-item"><div><div class="m-name">Mango Chia Bowl</div><div class="m-desc">Hung curd, mango, chia seeds, coconut flakes</div><div class="m-macro mono">290 kcal · 15g protein · 7g fat</div></div><div class="m-right"><div class="m-price">₹230</div></div></div>
+        <div class="menu-item"><div><div class="m-name">Pomegranate Pistachio Bowl</div><div class="m-desc">Greek yogurt, pomegranate, crushed pistachio, saffron</div><div class="m-macro mono">300 kcal · 17g protein · 9g fat</div></div><div class="m-right"><div class="m-price">₹250</div></div></div>
+      </div>
+    </div>
+
+    <div class="menu-panel" id="panel-toast">
+      <p class="menu-intro">Sourdough or multigrain, always toasted to order.</p>
+      <div class="menu-grid">
+        <div class="menu-item"><div><div class="m-name">Avocado Smash Toast</div><div class="m-desc">Multigrain, avocado, chili flakes, poached egg</div><div class="m-macro mono">320 kcal · 14g protein · 15g fat</div></div><div class="m-right"><div class="m-price">₹240</div></div></div>
+        <div class="menu-item"><div><div class="m-name">Cottage Cheese &amp; Herb Toast</div><div class="m-desc">Sourdough, whipped cottage cheese, basil, cherry tomato</div><div class="m-macro mono">280 kcal · 18g protein · 8g fat</div></div><div class="m-right"><div class="m-price">₹230</div></div></div>
+        <div class="menu-item"><div><div class="m-name">Peanut Banana Toast</div><div class="m-desc">Whole wheat, peanut butter, banana, chia</div><div class="m-macro mono">310 kcal · 12g protein · 12g fat</div></div><div class="m-right"><div class="m-price">₹200</div></div></div>
+        <div class="menu-item"><div><div class="m-name">Smoked Hummus Toast<span class="tag vegan">Vegan</span></div><div class="m-desc">Multigrain, roasted hummus, cucumber, sprouts</div><div class="m-macro mono">260 kcal · 10g protein · 9g fat</div></div><div class="m-right"><div class="m-price">₹210</div></div></div>
+      </div>
+    </div>
+
+    <div class="menu-panel" id="panel-drinks">
+      <p class="menu-intro">Matcha, lavender, and protein — no syrups, lightly sweetened with dates where needed.</p>
+      <div class="menu-grid">
+        <div class="menu-item"><div><div class="m-name">Matcha Oat Latte</div><div class="m-desc">Stone-ground matcha, steamed oat milk</div><div class="m-macro mono">120 kcal · 4g protein · 3g fat</div></div><div class="m-right"><div class="m-price">₹190</div></div></div>
+        <div class="menu-item"><div><div class="m-name">Lavender Oat Latte</div><div class="m-desc">House lavender syrup (date-sweetened), oat milk</div><div class="m-macro mono">130 kcal · 3g protein · 4g fat</div></div><div class="m-right"><div class="m-price">₹200</div></div></div>
+        <div class="menu-item"><div><div class="m-name">Protein Berry Smoothie</div><div class="m-desc">Plant protein, mixed berries, oat milk</div><div class="m-macro mono">220 kcal · 20g protein · 3g fat</div></div><div class="m-right"><div class="m-price">₹230</div></div></div>
+        <div class="menu-item"><div><div class="m-name">Iced Matcha Coconut</div><div class="m-desc">Matcha, coconut water, ice</div><div class="m-macro mono">90 kcal · 2g protein · 1g fat</div></div><div class="m-right"><div class="m-price">₹180</div></div></div>
+      </div>
+    </div>
+
+    <div class="menu-panel" id="panel-oat">
+      <p class="menu-intro">Rolled oats, soaked or warmed, built to actually keep you full.</p>
+      <div class="menu-grid">
+        <div class="menu-item"><div><div class="m-name">Classic Overnight Oats<span class="tag vegan">Vegan</span></div><div class="m-desc">Rolled oats, chia, almond milk, banana</div><div class="m-macro mono">320 kcal · 12g protein · 8g fat</div></div><div class="m-right"><div class="m-price">₹190</div></div></div>
+        <div class="menu-item"><div><div class="m-name">Protein Peanut Butter Oats</div><div class="m-desc">Oats, plant protein, peanut butter, banana</div><div class="m-macro mono">380 kcal · 24g protein · 12g fat</div></div><div class="m-right"><div class="m-price">₹230</div></div></div>
+        <div class="menu-item"><div><div class="m-name">Berry Almond Oats</div><div class="m-desc">Oats, mixed berries, almond flakes, honey</div><div class="m-macro mono">300 kcal · 10g protein · 7g fat</div></div><div class="m-right"><div class="m-price">₹200</div></div></div>
+        <div class="menu-item"><div><div class="m-name">Chocolate Banana Oats<span class="tag vegan">Vegan</span></div><div class="m-desc">Oats, raw cacao, banana, cinnamon</div><div class="m-macro mono">340 kcal · 11g protein · 9g fat</div></div><div class="m-right"><div class="m-price">₹210</div></div></div>
+        <div class="menu-item"><div><div class="m-name">Apple Cinnamon Oats<span class="tag vegan">Vegan</span></div><div class="m-desc">Oats, stewed apple, cinnamon, walnuts</div><div class="m-macro mono">310 kcal · 9g protein · 8g fat</div></div><div class="m-right"><div class="m-price">₹195</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="requests" id="requests">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <h2>Build your bowl</h2>
+        <p>Want more protein, less fat, or a swap for an allergy? Tell us here and we'll have it ready when you arrive.</p>
+      </div>
+    </div>
+
+    <div class="req-grid">
+      <div class="req-note reveal">
+        <p>Most macro swaps are ready in the same time as the original order.</p>
+        <ul>
+          <li>Extra protein scoop — always available, no notice needed</li>
+          <li>Nut-free preparation — please flag it, we'll use a clean station</li>
+          <li>Custom macro targets (e.g. under 300 kcal) — 2 hours' notice</li>
+          <li>Large group orders (8+) — 2 hours' notice</li>
+        </ul>
+      </div>
+
+      <form id="requestForm" class="reveal" novalidate>
+        <div class="row-2">
+          <div class="field">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" required autocomplete="name">
+          </div>
+          <div class="field">
+            <label for="contact">Phone or email</label>
+            <input type="text" id="contact" name="contact" required autocomplete="tel">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>What do you need?</label>
+          <div class="chip-group" id="chipGroup">
+            <button type="button" class="chip" data-value="High protein boost">High protein boost</button>
+            <button type="button" class="chip" data-value="Low carb swap">Low carb swap</button>
+            <button type="button" class="chip" data-value="Nut-free">Nut-free</button>
+            <button type="button" class="chip" data-value="Vegan">Vegan</button>
+            <button type="button" class="chip" data-value="Extra veggies">Extra veggies</button>
+            <button type="button" class="chip" data-value="Something else">Something else</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="details">Tell us more</label>
+          <textarea id="details" name="details" placeholder="E.g. I'd like the Grilled Chicken Power Bowl with double protein and no peanuts." required></textarea>
+        </div>
+
+        <div class="submit-row">
+          <button type="submit" class="stamp-btn">Send to the kitchen</button>
+          <span class="form-status mono" id="formStatus">Noted — we'll confirm shortly.</span>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer id="visit">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <h4>Bowl &amp; Bloom</h4>
+        <p class="addr">MP Nagar Zone II, Bhopal<br>Open 7:30 AM – 9:00 PM, all days</p>
+      </div>
+      <div>
+        <h4>Reach the counter</h4>
+        <p class="addr">+91 98xxx xxxxx<br>hello@bowlandbloom.example</p>
+      </div>
+    </div>
+    <div class="fine">
+      <span>© 2026 Bowl &amp; Bloom</span>
+      <span>Every bowl, macros included</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+  navToggle.addEventListener('click', () => {
+    const open = navLinks.classList.toggle('open');
+    navToggle.setAttribute('aria-expanded', open);
+  });
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    navLinks.classList.remove('open');
+    navToggle.setAttribute('aria-expanded', false);
+  }));
+
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => io.observe(el));
+
+  // Circular scroll-driven bowl motion: starts half off-page on the left,
+  // sweeps right along a circular arc as the hero is scrolled through.
+  // The three hero stats pop up one per "swipe" as the bowl crosses each third.
+  const heroScroll = document.getElementById('heroScroll');
+  const heroStage = document.getElementById('heroStage');
+  const bowl = document.getElementById('bowlIllustration');
+  const statEls = document.querySelectorAll('.hero-stats .stat');
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const swipeThresholds = { 1: 0.08, 2: 0.42, 3: 0.76 };
+
+  function updateBowl(){
+    if (!heroScroll || !bowl || !heroStage) return;
+
+    if (prefersReduced) {
+      bowl.style.transform = 'translate(-50%,-50%)';
+      statEls.forEach(el => el.classList.add('in'));
+      return;
+    }
+
+    const rect = heroScroll.getBoundingClientRect();
+    const scrollDist = rect.height - window.innerHeight;
+    let progress = scrollDist > 0 ? (-rect.top) / scrollDist : 0;
+    progress = Math.min(Math.max(progress, 0), 1);
+
+    const stageWidth = heroStage.clientWidth;
+    const xEnd = stageWidth * 0.85;
+    const cx = xEnd / 2;
+    const R = xEnd / 2;
+    const theta = (180 + progress * 180) * Math.PI / 180; // 180deg -> 360deg
+
+    const x = cx + R * Math.cos(theta);
+    const yAmplitude = stageWidth * 0.11;
+    const y = yAmplitude * Math.sin(theta); // arcs upward through the middle
+    const rotate = progress * 24 - 12;
+    const scale = 1 - Math.abs(Math.sin(theta)) * 0.05;
+
+    bowl.style.transform =
+      `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) rotate(${rotate}deg) scale(${scale})`;
+
+    statEls.forEach(el => {
+      const swipe = el.dataset.swipe;
+      const threshold = swipeThresholds[swipe];
+      el.classList.toggle('in', progress >= threshold);
+    });
+  }
+
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => { updateBowl(); ticking = false; });
+      ticking = true;
+    }
+  }, { passive: true });
+  window.addEventListener('resize', updateBowl);
+  updateBowl();
+
+  const itemIO = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('in'), i * 40);
+        itemIO.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.menu-item').forEach(el => itemIO.observe(el));
+
+  const tabsContainer = document.querySelector('.tabs');
+  const tabPill = document.getElementById('tabPill');
+  const tabs = document.querySelectorAll('.tab');
+  const panels = document.querySelectorAll('.menu-panel');
+
+  function movePillTo(tab){
+    if (!tabPill || !tab) return;
+    tabPill.style.left = tab.offsetLeft + 'px';
+    tabPill.style.width = tab.offsetWidth + 'px';
+  }
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.setAttribute('aria-selected', 'false'));
+      tab.setAttribute('aria-selected', 'true');
+      movePillTo(tab);
+      tab.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      panels.forEach(p => p.classList.remove('active'));
+      const target = document.getElementById('panel-' + tab.dataset.panel);
+      target.classList.add('active');
+      target.querySelectorAll('.menu-item').forEach((el, i) => {
+        el.classList.remove('in');
+        requestAnimationFrame(() => {
+          setTimeout(() => el.classList.add('in'), i * 40);
+        });
+      });
+    });
+  });
+
+  // Position the pill under the initially active tab, and re-sync on resize
+  // and after web fonts finish loading (font swap can shift tab widths).
+  function initPill(){
+    const activeTab = document.querySelector('.tab[aria-selected="true"]');
+    movePillTo(activeTab);
+  }
+  initPill();
+  window.addEventListener('load', initPill);
+  window.addEventListener('resize', initPill);
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(initPill);
+  }
+
+  document.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => chip.classList.toggle('selected'));
+  });
+
+  const form = document.getElementById('requestForm');
+  const status = document.getElementById('formStatus');
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    status.classList.add('show');
+    form.querySelector('.stamp-btn').textContent = 'Sent ✓';
+    setTimeout(() => {
+      form.querySelector('.stamp-btn').textContent = 'Send to the kitchen';
+    }, 2400);
+  });
+</script>
+
+</body>
+</html>
